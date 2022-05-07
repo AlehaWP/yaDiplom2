@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"sync"
 
+	"github.com/AlehaWP/yaDiplom2.git/client/internal/config"
 	"github.com/AlehaWP/yaDiplom2.git/client/internal/database"
 	"github.com/AlehaWP/yaDiplom2.git/client/pkg/logger"
 	"github.com/AlehaWP/yaDiplom2.git/client/pkg/ossignal"
@@ -23,7 +25,8 @@ func main() {
 
 	_, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	// cfg := config.NewConfig()
+	cfg := config.NewConfig()
+	fmt.Println(cfg)
 	sDB := database.OpenDBConnect()
 	defer sDB.Close()
 

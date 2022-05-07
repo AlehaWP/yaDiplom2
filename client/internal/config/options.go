@@ -21,8 +21,9 @@ var once sync.Once
 
 type Config struct {
 	ServAddr      string `env:"SERVER_ADDRESS" json:"server_address"`
-	AppDir        string `env:"APP_DIR" json:"app_dir"`
-	DBConnStr     string `env:"DB_CONN_STR" json:"db_conn_str"`
+	WorkDir       string `env:"WORK_DIR" json:"work_dir"`
+	AppDir        string `json:"-"`
+	DBConnStr     string `json:"-"` //`env:"DB_CONN_STR" json:"db_conn_str"`
 	ConfigPath    string `env:"CONFIG_FOR_READ" json:"-"`
 	TrustedSubnet string `env:"TRUSTED_SUBNET" json:"trusted_subnet"`
 }
@@ -32,8 +33,9 @@ func (ic *Config) fillFromConf(oc *Config) {
 		ic.ServAddr = oc.ServAddr
 	}
 
-	if len(oc.AppDir) != 0 {
-		ic.AppDir = oc.AppDir
+	if len(oc.WorkDir) != 0 {
+		ic.WorkDir = oc.WorkDir
+		ic.DBConnStr = oc.WorkDir + PathSeparator + "gophepass.db"
 	}
 
 	if len(oc.DBConnStr) != 0 {
@@ -114,8 +116,8 @@ func (c *Config) setFlags() {
 	f := new(Config)
 
 	flag.StringVar(&f.ServAddr, "s", c.ServAddr, "a server address string")
-	flag.StringVar(&f.AppDir, "a", c.AppDir, "a application directory path string")
-	flag.StringVar(&f.DBConnStr, "d", c.DBConnStr, "a file storage name string")
+	flag.StringVar(&f.WorkDir, "w", c.WorkDir, "a work directory path for db and other files string")
+	// flag.StringVar(&f.DBConnStr, "d", c.DBConnStr, "a file storage name string")
 	flag.StringVar(&f.ConfigPath, "c", "", "a config file path string")
 	flag.StringVar(&f.TrustedSubnet, "t", c.TrustedSubnet, "a trusted ip CIDR xxx.xxx.xxx.xxx/32")
 
@@ -127,15 +129,16 @@ func (c *Config) setFlags() {
 
 func createConfig() {
 
-	appDir, err := os.Getwd()
+	AppDir, err := os.Getwd()
 	if err != nil {
 		logger.Error(err)
 	}
 	cfg = Config{
 		ServAddr:      "localhost:8080",
-		AppDir:        appDir,
-		DBConnStr:     appDir + PathSeparator + "gophepass.db",
-		ConfigPath:    appDir + PathSeparator + "gophepass.json",
+		WorkDir:       AppDir,
+		AppDir:        AppDir,
+		DBConnStr:     AppDir + PathSeparator + "gophepass.db",
+		ConfigPath:    AppDir + PathSeparator + "gophepass.json",
 		TrustedSubnet: "",
 	}
 	cfg.readConfig("")
