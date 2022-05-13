@@ -2,10 +2,7 @@ package models
 
 import "context"
 
-type ServerDB interface {
+type DB interface {
 	CheckDBConnection(context.Context)
-	NewDBUserRepo() UsersRepo
-	NewDBOrdersRepo() OrdersRepo
-	NewDBBalanceRepo() BalanceRepo
 	Close()
 }

@@ -102,6 +102,7 @@ func exists(path string) (bool, error) {
 func (c *Config) saveConfiguration() error {
 	f := c.ConfigPath
 	configFile, err := os.OpenFile(f, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+	defer configFile.Close()
 	if err != nil {
 		return errors.New("не удалось найти файл " + f)
 	}
