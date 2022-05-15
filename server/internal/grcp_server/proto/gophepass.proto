@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option go_package = "github.com/AlehaWP/yaDiplom2.git/server/cmd/grpc_server/proto/proto";
+
+package proto;
+
+message  User{
+  string login = 1;
+}
+
+message File {
+  string name = 1;
+  string uuid = 2;
+  bytes data = 3;
+}
+
+message AddFileRequest {
+  File file = 1;
+  User user = 2;
+}
+
+message AddFileResponse {
+  string error = 1; // ошибка
+}
+
+service GophePass {
+  rpc AddFile(AddFileRequest) returns (AddFileResponse);
+}

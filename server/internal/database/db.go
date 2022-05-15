@@ -3,21 +3,25 @@ package database
 import (
 	"context"
 	"database/sql"
+	"sync"
 	"time"
 
-	_ "github.com/mattn/go-sqlite3"
-
-	"github.com/AlehaWP/yaDiplom2.git/client/internal/config"
-	"github.com/AlehaWP/yaDiplom2.git/client/internal/models"
-	"github.com/AlehaWP/yaDiplom2.git/client/pkg/logger"
+	"github.com/AlehaWP/yaDiplom2.git/server/internal/config"
+	"github.com/AlehaWP/yaDiplom2.git/server/internal/logger"
+	_ "github.com/lib/pq"
 )
 
-type serverDB struct {
+type progDB struct {
 	*sql.DB
 }
 
+var (
+	pdb  progDB
+	once sync.Once
+)
+
 //CheckDBConnection trying connect to db.
-func (s *serverDB) CheckDBConnection(ctx context.Context) {
+func (s progDB) CheckDBConnection(ctx context.Context) {
 	ctx, cancel := context.WithTimeout(ctx, time.Second)
 	defer cancel()
 
@@ -28,7 +32,7 @@ func (s *serverDB) CheckDBConnection(ctx context.Context) {
 }
 
 // makeMigrations start here for autotests
-// func (s *serverDB) makeMigrations() {
+// func (s *DB) makeMigrations() {
 // 	p := "Миграции базы данных:"
 // 	logger.Info(p, "Старт")
 // 	// setup database
@@ -39,21 +43,24 @@ func (s *serverDB) CheckDBConnection(ctx context.Context) {
 // 	logger.Info(p, "Завершение") // run app
 // }
 
-func OpenDBConnect() models.ServerDB {
-	s := new(serverDB)
+func OpenDBConnect() bool {
+
 	ctx := context.Background()
-	db, err := sql.Open("postgres", config.Cfg.DBConnString())
+	cfg := config.NewConfig()
+	db, err := sql.Open("postgres", cfg.DBConnStr)
 	if err != nil {
 		logger.Error("Ошибка подключения к БД", err)
+		return false
 	}
-	s.DB = db
-	s.CheckDBConnection(ctx)
-	s.createTables(ctx)
+
+	pdb.DB = db
+	pdb.CheckDBConnection(ctx)
+	pdb.createTables(ctx)
 
 	// s.makeMigrations()
-	return s
+	return true
 }
 
-func (s *serverDB) Close() {
-	s.DB.Close()
+func Close() {
+	pdb.Close()
 }

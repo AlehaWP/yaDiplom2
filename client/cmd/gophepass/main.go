@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/AlehaWP/yaDiplom2.git/client/internal/database"
+	"github.com/AlehaWP/yaDiplom2.git/client/internal/grcp_client"
 	"github.com/AlehaWP/yaDiplom2.git/client/internal/input"
 	"github.com/AlehaWP/yaDiplom2.git/client/pkg/logger"
 	"github.com/AlehaWP/yaDiplom2.git/client/pkg/ossignal"
@@ -25,6 +26,8 @@ func main() {
 	}
 	defer database.Close()
 
+	grcp_client.Start(ctx)
+
 	wg.Add(1)
 	go func() {
 		ossignal.HandleQuit(cancel)
@@ -36,6 +39,7 @@ func main() {
 		input.WaitInput(ctx)
 		wg.Done()
 	}()
+
 	// dat, err := ioutil.ReadFile(`/home/kseykseich/Go/github.com/AlehaWP/yaDiplom2.git/client/cmd/gophepass/gophepass`)
 	// if err != nil {
 	// 	logger.Info("Ошибка чтения файла", err)
