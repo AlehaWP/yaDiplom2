@@ -24,7 +24,27 @@ func AddFile(c pb.GophePassClient) {
 		File: file,
 		User: user,
 	})
-	fmt.Println(resp.Error)
+	fmt.Println(resp.Message)
+
+}
+
+// AddUser реализует интерфейс добавления пользователя.
+func AddAcc(c pb.GophePassClient) {
+
+	acc := &pb.Account{
+		Login:    "asdqwewqe",
+		Password: "asdqwe1237283120938",
+		Uuid:     "123",
+	}
+
+	user := &pb.User{
+		Uuid: "123123213sedasdasd",
+	}
+	resp, _ := c.AddAcc(context.Background(), &pb.AddAccRequest{
+		Account: acc,
+		User:    user,
+	})
+	fmt.Println(resp.Message)
 
 }
 
@@ -41,7 +61,7 @@ func Start(ctx context.Context) {
 
 	c := pb.NewGophePassClient(conn)
 
-	AddFile(c)
+	AddAcc(c)
 	// регистрируем сервис
 	// pb.RegisterGophePassServer(s, &GophePassServer{})
 

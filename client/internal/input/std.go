@@ -23,10 +23,19 @@ func WaitInput(ctx context.Context) {
 		default:
 			key = stdin.Read("Введите команду:")
 
+			if len(key) == 0 {
+				break
+			}
+
 			if strings.HasSuffix(key, "?") {
 				key = key[:len(key)-1]
 				suffix = "?"
 			}
+
+			if strings.HasPrefix(key, "^") {
+				break
+			}
+
 			key = strings.Trim(key, " ")
 
 			f, ok := handlers.Handlers[key]

@@ -22,7 +22,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GophePassClient interface {
-	AddFile(ctx context.Context, in *AddFileRequest, opts ...grpc.CallOption) (*AddFileResponse, error)
+	AddFile(ctx context.Context, in *AddFileRequest, opts ...grpc.CallOption) (*AddResponse, error)
+	AddAcc(ctx context.Context, in *AddAccRequest, opts ...grpc.CallOption) (*AddResponse, error)
+	AddCard(ctx context.Context, in *AddCardRequest, opts ...grpc.CallOption) (*AddResponse, error)
 }
 
 type gophePassClient struct {
@@ -33,9 +35,27 @@ func NewGophePassClient(cc grpc.ClientConnInterface) GophePassClient {
 	return &gophePassClient{cc}
 }
 
-func (c *gophePassClient) AddFile(ctx context.Context, in *AddFileRequest, opts ...grpc.CallOption) (*AddFileResponse, error) {
-	out := new(AddFileResponse)
+func (c *gophePassClient) AddFile(ctx context.Context, in *AddFileRequest, opts ...grpc.CallOption) (*AddResponse, error) {
+	out := new(AddResponse)
 	err := c.cc.Invoke(ctx, "/proto.GophePass/AddFile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gophePassClient) AddAcc(ctx context.Context, in *AddAccRequest, opts ...grpc.CallOption) (*AddResponse, error) {
+	out := new(AddResponse)
+	err := c.cc.Invoke(ctx, "/proto.GophePass/AddAcc", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gophePassClient) AddCard(ctx context.Context, in *AddCardRequest, opts ...grpc.CallOption) (*AddResponse, error) {
+	out := new(AddResponse)
+	err := c.cc.Invoke(ctx, "/proto.GophePass/AddCard", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +66,9 @@ func (c *gophePassClient) AddFile(ctx context.Context, in *AddFileRequest, opts 
 // All implementations must embed UnimplementedGophePassServer
 // for forward compatibility
 type GophePassServer interface {
-	AddFile(context.Context, *AddFileRequest) (*AddFileResponse, error)
+	AddFile(context.Context, *AddFileRequest) (*AddResponse, error)
+	AddAcc(context.Context, *AddAccRequest) (*AddResponse, error)
+	AddCard(context.Context, *AddCardRequest) (*AddResponse, error)
 	mustEmbedUnimplementedGophePassServer()
 }
 
@@ -54,8 +76,14 @@ type GophePassServer interface {
 type UnimplementedGophePassServer struct {
 }
 
-func (UnimplementedGophePassServer) AddFile(context.Context, *AddFileRequest) (*AddFileResponse, error) {
+func (UnimplementedGophePassServer) AddFile(context.Context, *AddFileRequest) (*AddResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddFile not implemented")
+}
+func (UnimplementedGophePassServer) AddAcc(context.Context, *AddAccRequest) (*AddResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddAcc not implemented")
+}
+func (UnimplementedGophePassServer) AddCard(context.Context, *AddCardRequest) (*AddResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddCard not implemented")
 }
 func (UnimplementedGophePassServer) mustEmbedUnimplementedGophePassServer() {}
 
@@ -88,6 +116,42 @@ func _GophePass_AddFile_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GophePass_AddAcc_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddAccRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GophePassServer).AddAcc(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.GophePass/AddAcc",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GophePassServer).AddAcc(ctx, req.(*AddAccRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GophePass_AddCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GophePassServer).AddCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.GophePass/AddCard",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GophePassServer).AddCard(ctx, req.(*AddCardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GophePass_ServiceDesc is the grpc.ServiceDesc for GophePass service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +162,14 @@ var GophePass_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddFile",
 			Handler:    _GophePass_AddFile_Handler,
+		},
+		{
+			MethodName: "AddAcc",
+			Handler:    _GophePass_AddAcc_Handler,
+		},
+		{
+			MethodName: "AddCard",
+			Handler:    _GophePass_AddCard_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,17 +1,21 @@
 syntax = "proto3";
 
-option go_package = "github.com/AlehaWP/yaDiplom2.git/client/cmd/grpc_client/proto/proto";
+option go_package = "github.com/AlehaWP/yaDiplom2.git/server/cmd/grpc_server/proto/proto";
 
 package proto;
 
 message  User{
   string login = 1;
+  string uuid = 2;
+  string password = 3;
+  string email = 4;
+  string phone = 5;
 }
 
 message File {
   string name = 1;
-  string uuid = 2;
-  bytes data = 3;
+  bytes data = 2;
+  string uuid = 3;
 }
 
 message AddFileRequest {
@@ -19,10 +23,38 @@ message AddFileRequest {
   User user = 2;
 }
 
-message AddFileResponse {
-  string error = 1; // ошибка
+message Account {
+  string login = 1;
+  string password = 2;
+  string uuid = 3;
+  bytes data = 4;
+}
+
+message AddAccRequest {
+  Account account = 1;
+  User user = 2;
+}
+
+message Card {
+	string number = 1;
+	string owner = 2;
+  string uuid = 3;
+	int32 month = 4;
+  int32	year = 5;
+}
+
+
+message AddCardRequest {
+  Card card = 1;
+  User user = 2;
+}
+
+message AddResponse {
+  string message = 1; // ошибка
 }
 
 service GophePass {
-  rpc AddFile(AddFileRequest) returns (AddFileResponse);
+  rpc AddFile(AddFileRequest) returns (AddResponse);
+  rpc AddAcc(AddAccRequest) returns (AddResponse);
+  rpc AddCard(AddCardRequest) returns (AddResponse);
 }
