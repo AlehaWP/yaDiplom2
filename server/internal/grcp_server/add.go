@@ -36,7 +36,7 @@ func (s *GophePassServer) AddFile(ctx context.Context, in *pb.AddFileRequest) (*
 }
 
 func (s *GophePassServer) AddAcc(ctx context.Context, in *pb.AddAccRequest) (*pb.AddResponse, error) {
-	fmt.Println(123324)
+
 	response := &pb.AddResponse{
 		Message: "нет ошибок",
 	}
