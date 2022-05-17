@@ -2,8 +2,6 @@ package grcp_server
 
 import (
 	"context"
-	"fmt"
-	"os"
 
 	"github.com/AlehaWP/yaDiplom2.git/server/internal/database"
 	pb "github.com/AlehaWP/yaDiplom2.git/server/internal/grcp_server/proto"
@@ -13,35 +11,31 @@ import (
 
 // AddUser реализует интерфейс добавления пользователя.
 func (s *GophePassServer) AddFile(ctx context.Context, in *pb.AddFileRequest) (*pb.AddResponse, error) {
-	response := &pb.AddResponse{
-		Message: "нет ошибок",
+	response := &pb.AddResponse{}
+
+	f := models.File{
+		User: models.User{
+			UUID: in.User.Uuid,
+		},
+		Name: in.File.Name,
+		Data: in.File.Data,
+		UUID: in.File.Uuid,
 	}
-
-	user := in.User
-
-	file := in.File.Data
-
-	os.WriteFile(in.File.Name, file, 0777)
-	fmt.Println(user)
-
-	// userID := in.User
-	// retURL, err := repo.SaveURL(ctx, in.Url.Url, baseURL, userID)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// response.Url.Url = retURL
-
+	m := "Добавления данных аккаунта UUID= " + in.File.Uuid + " на сервер "
+	if err := database.AddFile(ctx, f); err != nil {
+		logger.Info("AddAcc", m, f, err)
+		response.Message = m + "вызвало ошибку"
+		return response, err
+	}
+	response.Message = m + "прошло успешно"
 	return response, nil
-
 }
 
 func (s *GophePassServer) AddAcc(ctx context.Context, in *pb.AddAccRequest) (*pb.AddResponse, error) {
 
-	response := &pb.AddResponse{
-		Message: "нет ошибок",
-	}
+	response := &pb.AddResponse{}
 
-	acc := models.Account{
+	a := models.Account{
 		User: models.User{
 			UUID: in.User.Uuid,
 		},
@@ -49,36 +43,36 @@ func (s *GophePassServer) AddAcc(ctx context.Context, in *pb.AddAccRequest) (*pb
 		Password: in.Account.Password,
 		UUID:     in.Account.Uuid,
 	}
-
-	if err := database.AddAccount(ctx, acc); err != nil {
-		logger.Info("AddAcc", "Ошибка добавления данных", acc, err)
-		response.Message = "Ошибка добавления данных"
+	m := "Добавление данных аккаунта UUID= " + in.Account.Uuid + " на сервер"
+	if err := database.AddAccount(ctx, a); err != nil {
+		logger.Info("AddAcc", m, a, err)
+		response.Message = m + "вызвало ошибку"
 		return response, err
 	}
-
+	response.Message = m + "прошло успешно"
 	return response, nil
 
 }
 
 func (s *GophePassServer) AddCard(ctx context.Context, in *pb.AddCardRequest) (*pb.AddResponse, error) {
-	response := &pb.AddResponse{
-		Message: "нет ошибок",
+	response := &pb.AddResponse{}
+
+	c := models.Card{
+		User: models.User{
+			UUID: in.User.Uuid,
+		},
+		Number: in.Card.Number,
+		Month:  int(in.Card.Month),
+		Year:   int(in.Card.Month),
+		Owner:  in.Card.Owner,
+		UUID:   in.Card.Uuid,
 	}
-
-	// user := in.User
-
-	// file := in.File.Data
-
-	// os.WriteFile(in.File.Name, file, 0777)
-	// fmt.Println(user)
-
-	// userID := in.User
-	// retURL, err := repo.SaveURL(ctx, in.Url.Url, baseURL, userID)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// response.Url.Url = retURL
-
+	m := "Добавления данных аккаунта UUID= " + in.Card.Uuid + " на сервер "
+	if err := database.AddCard(ctx, c); err != nil {
+		logger.Info("AddAcc", m, c, err)
+		response.Message = m + "вызвало ошибку"
+		return response, err
+	}
+	response.Message = m + "прошло успешно"
 	return response, nil
-
 }
