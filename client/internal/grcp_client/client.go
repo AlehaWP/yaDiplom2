@@ -84,10 +84,10 @@ func Start(ctx context.Context) {
 	// создаём gRPC-сервер без зарегистрированной службы
 	defer conn.Close()
 
-	c := pb.NewGophePassClient(conn)
+	// c := pb.NewGophePassClient(conn)
 
-	AddFile(c)
-	GetFileList(c)
+	// AddFile(c)
+	// GetFileList(c)
 	// регистрируем сервис
 	// pb.RegisterGophePassServer(s, &GophePassServer{})
 

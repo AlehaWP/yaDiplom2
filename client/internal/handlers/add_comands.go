@@ -11,6 +11,7 @@ import (
 	"github.com/AlehaWP/yaDiplom2.git/client/internal/models"
 	"github.com/AlehaWP/yaDiplom2.git/client/internal/stdin"
 	"github.com/AlehaWP/yaDiplom2.git/client/pkg/logger"
+	"github.com/google/uuid"
 )
 
 var Handlers map[string]func(context.Context, string) (string, error)
@@ -29,6 +30,7 @@ func addAccount(ctx context.Context, suffix string) (string, error) {
 		fmt.Println("команда добавления связки логин-пароль")
 	}
 	account := models.Account{
+		UUID:     uuid.New().String(),
 		Login:    stdin.Read("Укажите логин:"),
 		Password: stdin.Read("Укажите пароль:"),
 	}
@@ -56,6 +58,7 @@ func addFile(ctx context.Context, suffix string) (string, error) {
 	// err = ioutil.WriteFile(`/home/kseykseich/Go/github.com/AlehaWP/yaDiplom2.git/client/gophe`, dat, 0777)
 
 	mf := models.File{
+		UUID: uuid.New().String(),
 		Name: fn,
 		Data: d,
 	}
@@ -85,6 +88,7 @@ func addCard(ctx context.Context, suffix string) (string, error) {
 	}
 	o := stdin.Read("Укажите владельца")
 	card := models.Card{
+		UUID:   uuid.New().String(),
 		Number: n,
 		Month:  m,
 		Year:   y,

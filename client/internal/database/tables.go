@@ -15,6 +15,7 @@ func (s progDB) createTables(ctx context.Context) {
 
 	_, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS files (
 								    id INTEGER PRIMARY KEY,
+									uuid VARCHAR(36) UNIQUE ON CONFLICT IGNORE,
 									name VARCHAR(255),
 									data BLOB,
 									to_client BOOLEAN default false,
@@ -27,6 +28,7 @@ func (s progDB) createTables(ctx context.Context) {
 
 	_, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS cards (
 									id INTEGER PRIMARY KEY,
+									uuid VARCHAR(36) UNIQUE ON CONFLICT IGNORE,
 									number VARCHAR(20),
 									month INTEGER,
 									year INTEGER,
@@ -40,6 +42,7 @@ func (s progDB) createTables(ctx context.Context) {
 	}
 	_, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS accounts (
 									id INTEGER PRIMARY KEY,
+									uuid VARCHAR(36) UNIQUE ON CONFLICT IGNORE,
 									login VARCHAR(255),
 									password VARCHAR(255),
 									to_client BOOLEAN default false,
