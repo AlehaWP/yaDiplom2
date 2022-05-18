@@ -2,6 +2,7 @@ package grcp_server
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/AlehaWP/yaDiplom2.git/server/internal/database"
 	pb "github.com/AlehaWP/yaDiplom2.git/server/internal/grcp_server/proto"
@@ -12,7 +13,7 @@ import (
 // AddUser реализует интерфейс добавления пользователя.
 func (s *GophePassServer) AddFile(ctx context.Context, in *pb.AddFileRequest) (*pb.AddResponse, error) {
 	response := &pb.AddResponse{}
-
+	fmt.Println("Получен запрос на добавление")
 	f := models.File{
 		User: models.User{
 			UUID: in.User.Uuid,
@@ -21,6 +22,7 @@ func (s *GophePassServer) AddFile(ctx context.Context, in *pb.AddFileRequest) (*
 		Data: in.File.Data,
 		UUID: in.File.Uuid,
 	}
+	fmt.Println("Обращаемся к БД")
 	m := "Добавления данных аккаунта UUID= " + in.File.Uuid + " на сервер "
 	if err := database.AddFile(ctx, f); err != nil {
 		logger.Info("AddAcc", m, f, err)

@@ -53,8 +53,25 @@ message AddResponse {
   string message = 1; // ошибка
 }
 
+message GetDataRequest {
+  User user = 1;
+  string uuid = 2;
+}
+
+message GetDataResponse {
+  string message = 1;
+  string name = 2;
+  bytes data = 3;
+}
+
 service GophePass {
   rpc AddFile(AddFileRequest) returns (AddResponse);
   rpc AddAcc(AddAccRequest) returns (AddResponse);
   rpc AddCard(AddCardRequest) returns (AddResponse);
+
+  rpc GetFileList(GetDataRequest) returns (GetDataResponse);
+  rpc GetFile(GetDataRequest) returns (GetDataResponse);
+  rpc GetAcc(GetDataRequest) returns (GetDataResponse);
+  rpc GetCard(GetDataRequest) returns (GetDataResponse);
 }
+

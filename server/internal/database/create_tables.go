@@ -30,7 +30,7 @@ func (s progDB) createTables(ctx context.Context) {
 	_, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS files (
 									id SERIAL PRIMARY KEY,
 									user_uuid VARCHAR(32) NOT NULL,
-									uuid VARCHAR(32) NOT NULL,
+									uuid VARCHAR(32) UNIQUE NOT NULL,
 									name VARCHAR(255),
 									data BYTEA,
 									date_add TIMESTAMPTZ(0) default (NOW() at time zone 'UTC+3'),
@@ -45,7 +45,7 @@ func (s progDB) createTables(ctx context.Context) {
 	_, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS cards (
 									id SERIAL PRIMARY KEY,
 									user_uuid VARCHAR(32) NOT NULL,
-									uuid VARCHAR(32) NOT NULL,
+									uuid VARCHAR(32) UNIQUE NOT NULL,
 									number VARCHAR(20),
 									month INTEGER,
 									year INTEGER,
@@ -61,7 +61,7 @@ func (s progDB) createTables(ctx context.Context) {
 	_, err = tx.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS accounts (
 									id SERIAL PRIMARY KEY,
 									user_uuid VARCHAR(32) NOT NULL,
-									uuid VARCHAR(32) NOT NULL,
+									uuid VARCHAR(32) UNIQUE NOT NULL,
 									login VARCHAR(255),
 									password VARCHAR(255),
 									date_add TIMESTAMPTZ(0) default (NOW() at time zone 'UTC+3'),

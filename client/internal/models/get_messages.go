@@ -1,35 +1,28 @@
 package models
 
-type User struct {
-	ID       int `json:"-"`
+type GetUser struct {
 	UUID     string
 	Login    string
 	Email    string
 	Password string
 }
 
-type Account struct {
-	ID       int `json:"-"`
+type GetAccount struct {
 	UUID     string
 	Login    string
 	Password string
-	User     User `json:"-"`
 }
 
-type File struct {
-	ID   int `json:"-"`
+type GetFile struct {
 	UUID string
 	Name string
 	Data []byte
-	User User `json:"-"`
 }
 
-type Card struct {
-	ID     int `json:"-"`
+type GetCard struct {
 	UUID   string
 	Number string
 	Owner  string
 	Month  int
 	Year   int
-	User   User `json:"-"`
 }
