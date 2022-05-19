@@ -39,7 +39,7 @@ func GetListFiles(ctx context.Context, u models.User) ([]models.File, error) {
 	return lF, nil
 }
 
-func GetFile(ctx context.Context, uuid int) (*models.File, error) {
+func GetFile(ctx context.Context, uuid string) (*models.File, error) {
 	ctx, cancelfunc := context.WithTimeout(ctx, 5*time.Second)
 	defer cancelfunc()
 	q := `SELECT uuid, name, data FROM files WHERE uuid=$1  and to_del!=true `

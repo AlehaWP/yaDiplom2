@@ -21,14 +21,16 @@ var (
 )
 
 //CheckDBConnection trying connect to db.
-func (s progDB) CheckDBConnection(ctx context.Context) {
+func CheckDBConnection(ctx context.Context) bool {
 	ctx, cancel := context.WithTimeout(ctx, time.Second)
 	defer cancel()
 
-	err := s.PingContext(ctx)
+	err := pdb.PingContext(ctx)
 	if err != nil {
 		logger.Error("Ошибка подключения к БД", err)
+		return false
 	}
+	return true
 }
 
 // makeMigrations start here for autotests
@@ -44,18 +46,21 @@ func (s progDB) CheckDBConnection(ctx context.Context) {
 // }
 
 func OpenDBConnect() bool {
-
+	var err error
 	ctx := context.Background()
 	cfg := config.NewConfig()
-	db, err := sql.Open("postgres", cfg.DBConnStr)
+
+	once.Do(func() {
+		pdb.DB, err = sql.Open("postgres", cfg.DBConnStr)
+		if err == nil {
+			CheckDBConnection(ctx)
+			createTables(ctx)
+		}
+	})
 	if err != nil {
 		logger.Error("Ошибка подключения к БД", err)
 		return false
 	}
-
-	pdb.DB = db
-	pdb.CheckDBConnection(ctx)
-	pdb.createTables(ctx)
 
 	// s.makeMigrations()
 	return true

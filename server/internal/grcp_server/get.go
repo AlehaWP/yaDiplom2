@@ -36,15 +36,66 @@ func (s *GophePassServer) GetFileList(ctx context.Context, in *pb.GetDataRequest
 
 func (s *GophePassServer) GetFile(ctx context.Context, in *pb.GetDataRequest) (*pb.GetDataResponse, error) {
 
-	return nil, nil
+	f, err := database.GetFile(ctx, in.Uuid)
+	if err != nil {
+		logger.Info("Ошибка запроса файла", in.Uuid)
+		return nil, err
+	}
+
+	b, err := json.Marshal(f)
+	if err != nil {
+		logger.Info("Ошибка маршализации файла", in.Uuid)
+		return nil, err
+	}
+	resp := &pb.GetDataResponse{
+		Message: "Файл получен",
+		Data:    b,
+	}
+	return resp, nil
 }
 
 func (s *GophePassServer) GetCard(ctx context.Context, in *pb.GetDataRequest) (*pb.GetDataResponse, error) {
+	user := models.User{
+		UUID: in.User.Uuid,
+	}
 
-	return nil, nil
+	с, err := database.GetListCards(ctx, user)
+	if err != nil {
+		logger.Info("Ошибка запроса списка карт пользователя", user.UUID)
+		return nil, err
+	}
+
+	b, err := json.Marshal(с)
+	if err != nil {
+		logger.Info("Ошибка маршализации списка карт пользователя", user.UUID)
+		return nil, err
+	}
+	resp := &pb.GetDataResponse{
+		Message: "Список сформирован",
+		Data:    b,
+	}
+	return resp, nil
 }
 
 func (s *GophePassServer) GetAcc(ctx context.Context, in *pb.GetDataRequest) (*pb.GetDataResponse, error) {
+	user := models.User{
+		UUID: in.User.Uuid,
+	}
 
-	return nil, nil
+	с, err := database.GetListAccounts(ctx, user)
+	if err != nil {
+		logger.Info("Ошибка запроса списка аккаунтов пользователя", user.UUID)
+		return nil, err
+	}
+
+	b, err := json.Marshal(с)
+	if err != nil {
+		logger.Info("Ошибка маршализации списка аккаунтов пользователя", user.UUID)
+		return nil, err
+	}
+	resp := &pb.GetDataResponse{
+		Message: "Список сформирован",
+		Data:    b,
+	}
+	return resp, nil
 }
