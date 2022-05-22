@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/caarlos0/env/v6 v6.9.2
+	github.com/google/uuid v1.1.2
 	github.com/lib/pq v1.10.5
 	google.golang.org/grpc v1.46.2
 	google.golang.org/protobuf v1.28.0

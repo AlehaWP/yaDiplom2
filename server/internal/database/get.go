@@ -9,6 +9,26 @@ import (
 	"github.com/AlehaWP/yaDiplom2.git/server/internal/models"
 )
 
+func GetUser(ctx context.Context, login string) (*models.User, error) {
+	ctx, cancelfunc := context.WithTimeout(ctx, 5*time.Second)
+	defer cancelfunc()
+	q := `SELECT uuid, login, password, email, phone FROM users WHERE login = $1 `
+	u := new(models.User)
+	row := pdb.QueryRowContext(ctx, q, login)
+
+	err := row.Scan(&u.UUID, &u.Login, &u.Password, &u.Email, &u.Phone)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	if err != nil {
+		logger.Info(q, err)
+		return nil, err
+	}
+
+	return u, nil
+}
+
 func GetListFiles(ctx context.Context, u models.User) ([]models.File, error) {
 	logger.Info("Запрос файлов пользователя")
 	ctx, cancelfunc := context.WithTimeout(ctx, 5*time.Second)

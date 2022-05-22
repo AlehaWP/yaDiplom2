@@ -5,6 +5,7 @@ type User struct {
 	UUID     string
 	Login    string
 	Email    string
+	Phone    string
 	Password string
 }
 

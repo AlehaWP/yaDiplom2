@@ -10,14 +10,13 @@ import (
 	"github.com/AlehaWP/yaDiplom2.git/client/pkg/logger"
 )
 
-func GetFileList(c pb.GophePassClient) {
+func (c Client) GetFileList(ctx context.Context) {
 
 	user := &pb.User{
-		Login: "Тест юзер",
-		Uuid:  "123123213sedasdasd",
+		Uuid: user.UUID,
 	}
 
-	resp, _ := c.GetFileList(context.Background(), &pb.GetDataRequest{
+	resp, _ := c.pbcl.GetFileList(ctx, &pb.GetDataRequest{
 		User: user,
 	})
 	lf := []models.File{}

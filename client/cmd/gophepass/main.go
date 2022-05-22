@@ -7,6 +7,7 @@ import (
 	"github.com/AlehaWP/yaDiplom2.git/client/internal/database"
 	"github.com/AlehaWP/yaDiplom2.git/client/internal/grcp_client"
 	"github.com/AlehaWP/yaDiplom2.git/client/internal/input"
+	"github.com/AlehaWP/yaDiplom2.git/client/internal/syncing"
 	"github.com/AlehaWP/yaDiplom2.git/client/pkg/logger"
 	"github.com/AlehaWP/yaDiplom2.git/client/pkg/ossignal"
 )
@@ -27,6 +28,7 @@ func main() {
 	defer database.Close()
 
 	grcp_client.Start(ctx)
+	defer grcp_client.Close()
 
 	wg.Add(1)
 	go func() {
@@ -37,6 +39,12 @@ func main() {
 	wg.Add(1)
 	go func() {
 		input.WaitInput(ctx)
+		wg.Done()
+	}()
+
+	wg.Add(1)
+	go func() {
+		syncing.Syncronize(ctx)
 		wg.Done()
 	}()
 

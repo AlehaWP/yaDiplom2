@@ -43,6 +43,13 @@ message Card {
   int32	year = 5;
 }
 
+message CheckRequest {
+}
+
+message CheckResponse {
+  string message = 1;
+  bool ok = 2;
+}
 
 message AddCardRequest {
   Card card = 1;
@@ -64,7 +71,19 @@ message GetDataResponse {
   bytes data = 3;
 }
 
+message LoginRequest {
+  User user = 1;
+}
+
+message LoginResponse {
+  User user = 1;
+  bool finded = 2;
+  bool auth = 3;
+}
+
 service GophePass {
+  rpc CheckConnection(CheckRequest) returns(CheckResponse);
+
   rpc AddFile(AddFileRequest) returns (AddResponse);
   rpc AddAcc(AddAccRequest) returns (AddResponse);
   rpc AddCard(AddCardRequest) returns (AddResponse);
@@ -73,5 +92,8 @@ service GophePass {
   rpc GetFile(GetDataRequest) returns (GetDataResponse);
   rpc GetAcc(GetDataRequest) returns (GetDataResponse);
   rpc GetCard(GetDataRequest) returns (GetDataResponse);
+
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc RegUser(LoginRequest) returns (LoginResponse);
 }
 
