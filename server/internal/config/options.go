@@ -146,7 +146,7 @@ func createConfig() {
 	cfg.setFlags()
 	cfg.saveConfiguration()
 
-	logger.Info("Создан config")
+	logger.Info("Создан config ")
 }
 
 // NewDefOptions return obj like Options interfase.
@@ -159,7 +159,7 @@ func NewConfig() Config {
 // 	ip2 := net.ParseIP(ip)
 // 	if ip2 == nil {
 // 		return false
-// 	}
+// 	}.
 
 // 	if len(d.trustedSubnet) == 0 {
 // 		return false
