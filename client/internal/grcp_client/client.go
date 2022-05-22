@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/AlehaWP/yaDiplom2.git/client/internal/config"
 	pb "github.com/AlehaWP/yaDiplom2.git/client/internal/grcp_client/proto"
 	"github.com/AlehaWP/yaDiplom2.git/client/internal/models"
 	"github.com/AlehaWP/yaDiplom2.git/client/pkg/logger"
@@ -50,7 +51,8 @@ func NewClient() (Client, bool) {
 func Start(ctx context.Context) {
 	var ok bool
 	var err error
-	conn, err = grpc.Dial(":3200", grpc.WithInsecure())
+	cfg := config.NewConfig()
+	conn, err = grpc.Dial(cfg.ServAddr, grpc.WithInsecure())
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -77,8 +79,9 @@ func Start(ctx context.Context) {
 		return
 	}
 
-	// AddFile(c)
-	// GetFileList(c)
+	c.GetAccList(ctx)
+	c.GetCardList(ctx)
+	c.GetFileList(ctx)
 }
 
 func Close() {

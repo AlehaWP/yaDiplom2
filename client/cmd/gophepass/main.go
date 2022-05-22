@@ -48,25 +48,6 @@ func main() {
 		wg.Done()
 	}()
 
-	// dat, err := ioutil.ReadFile(`/home/kseykseich/Go/github.com/AlehaWP/yaDiplom2.git/client/cmd/gophepass/gophepass`)
-	// if err != nil {
-	// 	logger.Info("Ошибка чтения файла", err)
-	// }
-	// fmt.Println(dat)
-	// err = ioutil.WriteFile(`/home/kseykseich/Go/github.com/AlehaWP/yaDiplom2.git/client/gophe`, dat, 0777)
-
-	// w := workers.NewWorkersPool(10)
-	// defer w.Close()
-
-	// l := accrual.NewSurveyAccrual(sDB.NewDBOrdersRepo(), sDB.NewDBBalanceRepo(), w)
-	// go func() {
-	// 	l.GetOrdersForSurveyFromDB(ctx)
-	// 	wg.Done()
-	// }()
-
-	// s := new(server.Server)
-	// s.ServerDB = sDB
-	// s.Start(ctx)
 	wg.Wait()
 	logger.Info("Клиент остановлен")
 

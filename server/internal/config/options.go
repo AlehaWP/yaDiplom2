@@ -134,7 +134,7 @@ func createConfig() {
 		logger.Error(err)
 	}
 	cfg = Config{
-		ServAddr:      "localhost:8080",
+		ServAddr:      ":3200",
 		WorkDir:       AppDir,
 		AppDir:        AppDir,
 		DBConnStr:     "user=ksei password=ksei dbname=yandex sslmode=disable",

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/AlehaWP/yaDiplom2.git/server/internal/config"
 	pb "github.com/AlehaWP/yaDiplom2.git/server/internal/grcp_server/proto"
 
 	"google.golang.org/grpc"
@@ -18,10 +19,10 @@ type GophePassServer struct {
 }
 
 func Start(ctx context.Context) {
-	// cfg := config.NewConfig()
+	cfg := config.NewConfig()
 
 	// определяем порт для сервера
-	listen, err := net.Listen("tcp", ":3200")
+	listen, err := net.Listen("tcp", cfg.ServAddr)
 	if err != nil {
 		fmt.Println(err)
 	}
