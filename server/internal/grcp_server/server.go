@@ -2,11 +2,12 @@ package grcp_server
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
-	"net"
 
 	"github.com/AlehaWP/yaDiplom2.git/server/internal/config"
 	pb "github.com/AlehaWP/yaDiplom2.git/server/internal/grcp_server/proto"
+	"golang.org/x/crypto/acme/autocert"
 
 	"google.golang.org/grpc"
 )
@@ -21,8 +22,17 @@ type GophePassServer struct {
 func Start(ctx context.Context) {
 	cfg := config.NewConfig()
 
+	manager := &autocert.Manager{
+		Cache:  autocert.DirCache("cache-dir"),
+		Prompt: autocert.AcceptTOS,
+		// HostPolicy: autocert.HostWhitelist(s.opt.ServAddr()),
+	}
+
+	t := manager.TLSConfig()
+
+	// tls.Config
 	// определяем порт для сервера
-	listen, err := net.Listen("tcp", cfg.ServAddr)
+	listen, err := tls.Listen("tcp", cfg.ServAddr, t)
 	if err != nil {
 		fmt.Println(err)
 	}
